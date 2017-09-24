@@ -13,6 +13,16 @@ app.listen(port, function(){
 })
 
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    //res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
+app.use(allowCrossDomain);
+
 // Connect
 //const dbURI = 'mongodb://localhost:27017/mean';
 const dbURI = 'mongodb://mwprojects:qqq111@ds147974.mlab.com:47974/mwprojects';
