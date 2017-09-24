@@ -271,7 +271,7 @@ app.post('/editgoal', (req, res) => {
 	let goal = req.body.goal;
 	let dateAdded = req.body.dateAdded;
 	let done = req.body.done;
-	let dateDone = req.body.dataDone;
+	let dateDone = req.body.dateDone;
   connection((db) => {
     db.collection('bucket-list')
     	.update({
