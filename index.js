@@ -315,7 +315,6 @@ app.post('/editgoal', (req, res) => {
 app.post('/completegoal', (req, res) => {
   let username = req.body.username;
   let id = req.body.id;
-  let goal = req.body.goal;
   let dateDone = req.body.dateDone;
   connection((db) => {
     db.collection('bucket-list')
