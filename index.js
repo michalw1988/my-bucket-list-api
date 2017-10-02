@@ -65,6 +65,7 @@ app.get('/all', (req, res) => {
 
 // Try to log in
 app.post('/login', (req, res) => {
+  console.log(req.body);
   let username = req.body.username;
   let password = req.body.password;
   connection((db) => {
@@ -310,6 +311,38 @@ app.post('/editgoal', (req, res) => {
 });
 
 
+// Complete existing goal
+app.post('/completegoal', (req, res) => {
+  let username = req.body.username;
+  let id = req.body.id;
+  let goal = req.body.goal;
+  let dateDone = req.body.dateDone;
+  connection((db) => {
+    db.collection('bucket-list')
+      .update({
+          "username": username,
+          "list.id": id
+        },
+        {
+          $set: {
+            "list.$.done": true,
+            "list.$.date_done": dateDone
+          }
+        })
+      .then((result) => {
+        let response = {
+          status: 200,
+          message: 'Goal completed'
+        };
+        res.json(response);
+      })
+      .catch((err) => {
+        sendError(err, res);
+      });
+  });
+});
+
+
 
 /*
 post		/login 						DONE
@@ -321,4 +354,5 @@ post		/deleteuser				DONE
 post		/addgoal					DONE
 post		/editgoal					DONE
 post		/deletegoal				DONE
+post    /completegoal     DONE
 */
