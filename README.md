@@ -102,7 +102,7 @@ If executed correctly, returns status 200 and "Goal completed" message.
 
 Parameters:
 * username - user's login
-* id - goal's id
+* id - goal id
 * dateDone - date when a goal was completed
 
 **/editgoal**
@@ -113,7 +113,7 @@ If executed correctly, returns status 200 and "Goal edited" message.
 
 Parameters:
 * username - user's login
-* id - goal's id
+* id - goal id
 * goal - goal description
 * dateAdded - date when a goal was added to user's list
 * done - whether a goal is done or not (true | false)
@@ -127,7 +127,7 @@ If executed correctly, returns status 200 and "Goal deleted" message.
 
 Parameters:
 * username - user's login
-* id - goal's id
+* id - goal id
 
 ## The application:
 
