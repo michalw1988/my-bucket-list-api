@@ -14,7 +14,7 @@ Gives ability to:
 * edit given goal for logged user
 * remove given goal for logged iser
 
-Built on Node.js, Express and connected to MongoDB database hosted on mlab.com.
+Built on Node.js, Express and connected to MongoDB database hosted on https://mlab.com/
 
 ## API documentation
 
@@ -31,83 +31,83 @@ All of the endpoints are POST type endpoints.
 ...
 
 Parameters:
-* username - ...
-* password - ...
+* username - user's login
+* password - user's password
 
 **/newuser**
 
 ...
 
 Parameters:
-* username - ...
-* password - ...
+* username - user's login
+* password - user's password
 
 **/checkusername**
 
 ...
 
 Parameters:
-* username - ...
+* username - user's login
 
 **/getuser**
 
 ...
 
 Parameters:
-* username - ...
+* username - user's login
 
 **/changepassword**
 
 ...
 
 Parameters:
-username - ...
-password - ...
+* username - user's login
+* password - user's password
 
 **/deleteuser**
 
 ...
 
 Parameters:
-* username - ...
+* username - user's login
 
 **/addgoal**
 
 ...
 
 Parameters:
-* username - ...
-* goal - ...
-* dateAdded - ...
+* username - user's login
+* goal - goal description
+* dateAdded - date when a goal was added to user's list
 
 **/completegoal**
 
 ...
 
 Parameters:
-* username - ...
-* id - ...
-* dateDone - ...
+* username - user's login
+* id - goal's id
+* dateDone - date when a goal was completed
 
 **/editgoal**
 
 ...
 
 Parameters:
-* username - ...
-* id - ...
-* goal - ...
-* dateAdded - ...
-* done - ...
-* dateDone - ...
+* username - user's login
+* id - goal's id
+* goal - goal description
+* dateAdded - date when a goal was added to user's list
+* done - whether a goal is done or not (true | false)
+* dateDone - date when a goal was completed
 
 **/deletegoal**
 
 ...
 
 Parameters:
-* username - ...
-* id - ...
+* username - user's login
+* id - goal's id
 
 ## The application:
 
