@@ -28,7 +28,9 @@ All of the endpoints are POST type endpoints.
 
 **/login**
 
-...
+Checks if given username and password pair exists in the database.
+
+If executed correctly, returns status 200 and "Login OK" or "Login failed" message.
 
 Parameters:
 * username - user's login
@@ -36,7 +38,9 @@ Parameters:
 
 **/newuser**
 
-...
+Creates new user in the database and assigns him a password. 
+
+If executed correctly, returns status 200 and "User created" message.
 
 Parameters:
 * username - user's login
@@ -44,21 +48,27 @@ Parameters:
 
 **/checkusername**
 
-...
+Checks if given username exists in the database.
+
+If executed correctly, returns status 200 and "Username taken" or "Username is free" message.
 
 Parameters:
 * username - user's login
 
 **/getuser**
 
-...
+Gets all data for given username from the database.
+
+If executed correctly, returns status 200 and entire user document.
 
 Parameters:
 * username - user's login
 
 **/changepassword**
 
-...
+Chagnes password for given username.
+
+If executed correctly, returns status 200 and "Password changed" message.
 
 Parameters:
 * username - user's login
@@ -66,14 +76,18 @@ Parameters:
 
 **/deleteuser**
 
-...
+Removes given user from the database.
+
+If executed correctly, returns status 200 and "User deleted" message.
 
 Parameters:
 * username - user's login
 
 **/addgoal**
 
-...
+Adds new goal for given user.
+
+If executed correctly, returns status 200 and "Goal added" message.
 
 Parameters:
 * username - user's login
@@ -82,7 +96,9 @@ Parameters:
 
 **/completegoal**
 
-...
+For given user, marks goal with given id as done and sets a completion date.
+
+If executed correctly, returns status 200 and "Goal completed" message.
 
 Parameters:
 * username - user's login
@@ -91,7 +107,9 @@ Parameters:
 
 **/editgoal**
 
-...
+For given user, assigns new values for goal with given id.
+
+If executed correctly, returns status 200 and "Goal edited" message.
 
 Parameters:
 * username - user's login
@@ -103,7 +121,9 @@ Parameters:
 
 **/deletegoal**
 
-...
+For given user, removes goal with given id.
+
+If executed correctly, returns status 200 and "Goal deleted" message.
 
 Parameters:
 * username - user's login
