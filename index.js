@@ -7,24 +7,23 @@ const ObjectID = require('mongodb').ObjectID;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+// Listen on given port or on 3000
 const port = process.env.PORT || '3000';
 app.listen(port, function(){
   console.log(`Server started on port ${port}`);
 })
 
 
+// Allow CORS
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    //res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-    next();
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
 }
-
 app.use(allowCrossDomain);
 
-// Connect
-//const dbURI = 'mongodb://localhost:27017/mean';
+
+// Connect do database
 const dbURI = 'mongodb://mwprojects:qqq111@ds147974.mlab.com:47974/mwprojects';
 const connection = (closure) => {
   return MongoClient.connect(dbURI, (err, db) => {
@@ -43,7 +42,7 @@ const sendError = (err, res) => {
 
 
 // Get all data
-app.get('/all', (req, res) => {
+/*app.get('/all', (req, res) => {
   connection((db) => {
     db.collection('bucket-list')
       .find()
@@ -60,12 +59,11 @@ app.get('/all', (req, res) => {
           sendError(err, res);
       });
   });
-});
+});*/
 
 
-// Try to log in
+// Try to login
 app.post('/login', (req, res) => {
-  console.log(req.body);
   let username = req.body.username;
   let password = req.body.password;
   connection((db) => {
@@ -81,6 +79,55 @@ app.post('/login', (req, res) => {
           message: []
         };
         (result.length > 0) ? response.message = 'Login OK' : response.message = 'Login failed';
+        res.json(response);
+      })
+      .catch((err) => {
+          sendError(err, res);
+      });
+  });
+});
+
+
+// Create new user
+app.post('/newuser', (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+  connection((db) => {
+    db.collection('bucket-list')
+      .insertOne({
+        "username": username,
+        "password": password,
+        "list": []
+      })
+      .then((users) => {
+        let response = {
+          status: 200,
+          message: 'User created'
+        };
+        res.json(response);
+      })
+      .catch((err) => {
+          sendError(err, res);
+      });
+  });
+});
+
+
+// Check if username is free
+app.post('/checkusername', (req, res) => {
+  let username = req.body.username;
+  connection((db) => {
+    db.collection('bucket-list')
+      .find({
+        username: username
+      })
+      .toArray()
+      .then((result) => {
+        let response = {
+          status: 200,
+          message: ''
+        };
+        (result.length > 0) ? response.message = 'Username taken' : response.message = 'Username is free';
         res.json(response);
       })
       .catch((err) => {
@@ -114,77 +161,6 @@ app.post('/getuser', (req, res) => {
 });
 
 
-// Create new user
-app.post('/newuser', (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
-  connection((db) => {
-    db.collection('bucket-list')
-    	.insertOne({
-  	    "username": username,
-  	    "password": password,
-  	    "list": []
-    	})
-    	.then((users) => {
-  			let response = {
-  			  status: 200,
-  			  message: 'User created'
-  			};
-  	    res.json(response);
-    	})
-    	.catch((err) => {
-    	    sendError(err, res);
-    	});
-  });
-});
-
-
-// Check if username is free
-app.post('/checkusername', (req, res) => {
-  let username = req.body.username;
-  connection((db) => {
-    db.collection('bucket-list')
-    	.find({
-      	username: username
-      })
-      .toArray()
-      .then((result) => {
-        let response = {
-          status: 200,
-          message: ''
-        };
-        (result.length > 0) ? response.message = 'Username taken' : response.message = 'Username is free';
-        res.json(response);
-      })
-      .catch((err) => {
-          sendError(err, res);
-      });
-  });
-});
-
-
-// Delete user
-app.post('/deleteuser', (req, res) => {
-  let username = req.body.username;
-  connection((db) => {
-    db.collection('bucket-list')
-    	.deleteOne({
-        "username": username
-      })
-      .then((users) => {
-    		let response = {
-    		  status: 200,
-    		  message: 'User deleted'
-    		};
-        res.json(response);
-      })
-      .catch((err) => {
-        sendError(err, res);
-      });
-  });
-});
-
-
 // Change password
 app.post('/changepassword', (req, res) => {
   let username = req.body.username;
@@ -211,6 +187,28 @@ app.post('/changepassword', (req, res) => {
 });
 
 
+// Delete user
+app.post('/deleteuser', (req, res) => {
+  let username = req.body.username;
+  connection((db) => {
+    db.collection('bucket-list')
+      .deleteOne({
+        "username": username
+      })
+      .then((users) => {
+        let response = {
+          status: 200,
+          message: 'User deleted'
+        };
+        res.json(response);
+      })
+      .catch((err) => {
+        sendError(err, res);
+      });
+  });
+});
+
+
 // Add new goal
 app.post('/addgoal', (req, res) => {
   let username = req.body.username;
@@ -224,15 +222,15 @@ app.post('/addgoal', (req, res) => {
     		},
     		{
     		 $push: {
-    		   	"list": {
-    		   		id: id,
-  		      	goal: goal,
-  		      	date_added: dateAdded,
-  		      	done: false,
-  		      	date_done: ""
-    		   	}
-    		 	}
-    		})
+  		   	"list": {
+  		   		id: id,
+		      	goal: goal,
+		      	date_added: dateAdded,
+		      	done: false,
+		      	date_done: ""
+  		   	}
+  		 	}
+  		})
       .then((result) => {
     		let response = {
     		  status: 200,
@@ -247,25 +245,28 @@ app.post('/addgoal', (req, res) => {
 });
 
 
-// Delete existing goal
-app.post('/deletegoal', (req, res) => {
+// Complete existing goal
+app.post('/completegoal', (req, res) => {
   let username = req.body.username;
-	let id = req.body.id;
+  let id = req.body.id;
+  let dateDone = req.body.dateDone;
   connection((db) => {
     db.collection('bucket-list')
-    	.update({
-    		 	"username": username
-    		},
-    		{
-    			$pull: {
-    		  	list: {id: id}
-    		 	}
-    		})
+      .update({
+          "username": username,
+          "list.id": id
+        },
+        {
+          $set: {
+            "list.$.done": true,
+            "list.$.date_done": dateDone
+          }
+        })
       .then((result) => {
-    		let response = {
-    		  status: 200,
-    		  message: 'Goal deleted'
-    		};
+        let response = {
+          status: 200,
+          message: 'Goal completed'
+        };
         res.json(response);
       })
       .catch((err) => {
@@ -311,27 +312,24 @@ app.post('/editgoal', (req, res) => {
 });
 
 
-// Complete existing goal
-app.post('/completegoal', (req, res) => {
+// Delete existing goal
+app.post('/deletegoal', (req, res) => {
   let username = req.body.username;
   let id = req.body.id;
-  let dateDone = req.body.dateDone;
   connection((db) => {
     db.collection('bucket-list')
       .update({
-          "username": username,
-          "list.id": id
+          "username": username
         },
         {
-          $set: {
-            "list.$.done": true,
-            "list.$.date_done": dateDone
+          $pull: {
+            list: {id: id}
           }
         })
       .then((result) => {
         let response = {
           status: 200,
-          message: 'Goal completed'
+          message: 'Goal deleted'
         };
         res.json(response);
       })
@@ -340,18 +338,3 @@ app.post('/completegoal', (req, res) => {
       });
   });
 });
-
-
-
-/*
-post		/login 						DONE
-post		/getuser					DONE
-post		/checkusername		DONE	
-post		/newuser					DONE
-post		/changepassword		DONE
-post		/deleteuser				DONE	
-post		/addgoal					DONE
-post		/editgoal					DONE
-post		/deletegoal				DONE
-post    /completegoal     DONE
-*/
